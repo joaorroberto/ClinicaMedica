@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import Controller.ConsultationController;
 import DataBaseConnection.DoctorDAO;
 import DataBaseConnection.DoctorJDBC;
+import DataBaseConnection.PatientDoctorDAO;
 import DataBaseConnection.PatientJDBC;
 
 import java.util.InputMismatchException;
@@ -27,6 +28,7 @@ public class PrincipalView extends JFrame {
     private JButton VisualizarConsultas;
     private JButton DeletarDoctor;
     private JButton DeletarPaciente;
+    private JButton MarcarConsultas;
     public PrincipalView() {
         
         //WINDOW SETTINGS
@@ -45,6 +47,7 @@ public class PrincipalView extends JFrame {
         VisualizarConsultas = new JButton("Visualizar consultas");
         DeletarDoctor = new JButton("Deletar doutor do banco de dados");
         DeletarPaciente = new JButton("Deletar paciente do banco de dados");
+        MarcarConsultas = new JButton("Adicionar consultas ao banco de dados");
 
         //BUTTON LAYOUT CONFIGURATION
         JPanel buttonPanel = new JPanel(new GridLayout(0, 1, 0, 10));
@@ -55,6 +58,7 @@ public class PrincipalView extends JFrame {
         buttonPanel.add(VisualizarConsultas);
         buttonPanel.add(DeletarDoctor);
         buttonPanel.add(DeletarPaciente);
+        buttonPanel.add(MarcarConsultas);
 
         //ADDS BUTTON PANEL TO MAIN PANEL
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
@@ -131,6 +135,28 @@ public class PrincipalView extends JFrame {
                     System.out.println("Paciente excluído com sucesso!");
                 } catch (InputMismatchException ex) {
                     System.out.println("Id inválido");
+                }
+            }
+        });
+
+        MarcarConsultas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Scanner scanner = new Scanner(System.in);
+
+                System.out.print("Digite o ID do paciente: ");
+                int pacienteId = scanner.nextInt();
+        
+                System.out.print("Digite o ID do médico: ");
+                int doctorId = scanner.nextInt();
+        
+                PatientDoctorDAO patientDoctorDAO = new PatientDoctorDAO();
+        
+                try {
+                    patientDoctorDAO.adicionarAssociacao(pacienteId, doctorId);
+                    System.out.println("Associação paciente-médico adicionada com sucesso!");
+                } catch (SQLException ex) {
+                    System.out.println("Erro ao adicionar associação paciente-médico: " + ex.getMessage());
                 }
             }
         });

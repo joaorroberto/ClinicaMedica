@@ -3,11 +3,15 @@ package View;
 import javax.swing.*;
 
 import Controller.ConsultationController;
+import DataBaseConnection.ConnectionDB;
+import DataBaseConnection.PatientDoctorDAO;
 import Model.Consultation;
 import Model.Doctor;
+import Model.FactoryMethod;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 
 public class AddConsultation extends JFrame {
     private JLabel dataLabel, doutorLabel, pacienteLabel, detalhesLabel;
@@ -16,7 +20,7 @@ public class AddConsultation extends JFrame {
     private JButton adicionarButton;
     private JButton removerButton;
 
-    //singleton consultation
+    // singleton consultation
     ConsultationController medical = ConsultationController.getInstance();
 
     public AddConsultation(PrincipalView principalView) {
@@ -34,22 +38,26 @@ public class AddConsultation extends JFrame {
         detalhesLabel = new JLabel("Detalhes da consulta:");
         detalhesArea = new JTextArea(5, 30);
         JScrollPane scrollPane = new JScrollPane(detalhesArea);
-
+        ConnectionDB connection = new ConnectionDB();
         adicionarButton = new JButton("Adicionar consulta");
         adicionarButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Consultation consulta = new Consultation(dataField.getText(), medical.getbyname(doutorField.getText()), medical.pegarpaciente(pacienteField.getText()), detalhesArea.getText());
-                System.out.println("Consulta entre adicionada com sucesso");
-                
-                medical.adicionarconsulta(consulta);
+                int doctorId = Integer.parseInt(doutorField.getText());
+                int patientId = Integer.parseInt(pacienteField.getText());
 
-
+                PatientDoctorDAO patientDoctorDAO = new PatientDoctorDAO();
+                try {
+                    patientDoctorDAO.adicionarAssociacao(patientId, doctorId);
+                    System.out.println("Consulta marcada com sucesso!");
+                } catch (SQLException ex) {
+                    System.out.println("Erro ao marcar consulta: " + ex.getMessage());
+                }
 
                 dataField.setText("");
                 doutorField.setText("");
                 pacienteField.setText("");
                 detalhesArea.setText("");
-                //ADD CONSULTATION
+                // ADD CONSULTATION
             }
         });
 
@@ -59,13 +67,15 @@ public class AddConsultation extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
                 principalView.setVisible(true);
-                //BACK BUTTON
+                // BACK BUTTON
             }
-            
+
         });
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
+
+        // Configuração dos componentes no painel
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -101,7 +111,7 @@ public class AddConsultation extends JFrame {
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.EAST;
-        panel.add(scrollPane, gbc);
+        panel.add(scrollPane, gbc); // Correção do erro de fechamento do bloco
 
         gbc.gridx = 1;
         gbc.gridy = 4;
@@ -121,5 +131,4 @@ public class AddConsultation extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
-
 }
