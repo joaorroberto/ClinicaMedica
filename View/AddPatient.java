@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import Controller.ConsultationController;
+import DataBaseConnection.ConnectionDB;
+import DataBaseConnection.PatientJDBC;
 import Model.FactoryMethod;
 import Model.Patient;
 
@@ -85,6 +87,7 @@ public class AddPatient extends JFrame {
 
         //SAVE BUTTON
         salvarButton.addActionListener(new ActionListener() {
+            ConnectionDB ConnectionDB = new ConnectionDB();
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -92,9 +95,9 @@ public class AddPatient extends JFrame {
                 String nome = inputNome.getText();
                 String birthdate = inputBirthdate.getText();
 
-                Patient paciente = new Patient(id, nome, birthdate);
-                medical.adicionarpaciente(paciente);
                 Patient fact = FactoryMethod.CreatePatient(id, nome, birthdate);
+                PatientJDBC paciente = new PatientJDBC();
+                paciente.adicionarPaciente(fact);
                 System.out.println("Paciente adicionado com sucesso !");
                 
             }

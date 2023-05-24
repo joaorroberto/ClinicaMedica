@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import Controller.ConsultationController;
 import DataBaseConnection.DoctorDAO;
 import DataBaseConnection.DoctorJDBC;
+import DataBaseConnection.PatientJDBC;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -25,6 +26,7 @@ public class PrincipalView extends JFrame {
     private JButton AddConsultation;
     private JButton VisualizarConsultas;
     private JButton DeletarDoctor;
+    private JButton DeletarPaciente;
     public PrincipalView() {
         
         //WINDOW SETTINGS
@@ -42,6 +44,7 @@ public class PrincipalView extends JFrame {
         AddConsultation = new JButton("Adicionar consulta");
         VisualizarConsultas = new JButton("Visualizar consultas");
         DeletarDoctor = new JButton("Deletar doutor do banco de dados");
+        DeletarPaciente = new JButton("Deletar paciente do banco de dados");
 
         //BUTTON LAYOUT CONFIGURATION
         JPanel buttonPanel = new JPanel(new GridLayout(0, 1, 0, 10));
@@ -51,6 +54,7 @@ public class PrincipalView extends JFrame {
         buttonPanel.add(AddConsultation);
         buttonPanel.add(VisualizarConsultas);
         buttonPanel.add(DeletarDoctor);
+        buttonPanel.add(DeletarPaciente);
 
         //ADDS BUTTON PANEL TO MAIN PANEL
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
@@ -108,6 +112,23 @@ public class PrincipalView extends JFrame {
                     DoctorJDBC doctorJDBC = new DoctorJDBC();
                     doctorJDBC.excluirDoctor(id);
                     System.out.println("Médico excluído com sucesso!");
+                } catch (InputMismatchException ex) {
+                    System.out.println("Id inválido");
+                }
+            }
+        });
+
+        DeletarPaciente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Digite o ID do paciente a ser excluído: ");
+                int id;
+                try {
+                    id = scanner.nextInt();
+                    PatientJDBC poctorJDBC = new PatientJDBC();
+                    poctorJDBC.excluirPaciente(id);
+                    System.out.println("Paciente excluído com sucesso!");
                 } catch (InputMismatchException ex) {
                     System.out.println("Id inválido");
                 }
