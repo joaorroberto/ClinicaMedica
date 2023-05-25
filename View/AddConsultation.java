@@ -42,12 +42,14 @@ public class AddConsultation extends JFrame {
         adicionarButton = new JButton("Adicionar consulta");
         adicionarButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int doctorId = Integer.parseInt(doutorField.getText());
-                int patientId = Integer.parseInt(pacienteField.getText());
+                int doctor_Id = Integer.parseInt(doutorField.getText());
+                int patient_Id = Integer.parseInt(pacienteField.getText());
+                String consultadata = dataField.getText();
+                String detalhes = detalhesArea.getText();
 
                 PatientDoctorDAO patientDoctorDAO = new PatientDoctorDAO();
                 try {
-                    patientDoctorDAO.adicionarAssociacao(patientId, doctorId);
+                    patientDoctorDAO.adicionarAssociacao(patient_Id, doctor_Id, consultadata, detalhes);
                     System.out.println("Consulta marcada com sucesso!");
                 } catch (SQLException ex) {
                     System.out.println("Erro ao marcar consulta: " + ex.getMessage());

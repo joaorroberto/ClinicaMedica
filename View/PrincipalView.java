@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.awt.Dimension;
 
 public class PrincipalView extends JFrame {
+    private PatientDoctorDAO patientDoctorDAO;
     private JPanel mainPanel;
     private JButton AddPatient;
     private JButton AddDoctor;
@@ -29,6 +30,7 @@ public class PrincipalView extends JFrame {
     private JButton DeletarDoctor;
     private JButton DeletarPaciente;
     private JButton MarcarConsultas;
+    private JButton DesmarcarConsultas;
     public PrincipalView() {
         
         //WINDOW SETTINGS
@@ -48,6 +50,7 @@ public class PrincipalView extends JFrame {
         DeletarDoctor = new JButton("Deletar doutor do banco de dados");
         DeletarPaciente = new JButton("Deletar paciente do banco de dados");
         MarcarConsultas = new JButton("Adicionar consultas ao banco de dados");
+        DesmarcarConsultas = new JButton("Retirar consultas do banco de dados");
 
         //BUTTON LAYOUT CONFIGURATION
         JPanel buttonPanel = new JPanel(new GridLayout(0, 1, 0, 10));
@@ -59,6 +62,7 @@ public class PrincipalView extends JFrame {
         buttonPanel.add(DeletarDoctor);
         buttonPanel.add(DeletarPaciente);
         buttonPanel.add(MarcarConsultas);
+        buttonPanel.add(DesmarcarConsultas);
 
         //ADDS BUTTON PANEL TO MAIN PANEL
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
@@ -149,17 +153,52 @@ public class PrincipalView extends JFrame {
         
                 System.out.print("Digite o ID do médico: ");
                 int doctorId = scanner.nextInt();
+
+                scanner.nextLine(); // Consumir a quebra de linha pendente
+
+                System.out.print("Digite a data da consulta: ");
+                String dataConsulta = scanner.nextLine();
+
+                System.out.print("Digite os detalhes da consulta: ");
+                String detalhesConsulta = scanner.nextLine();
+
         
                 PatientDoctorDAO patientDoctorDAO = new PatientDoctorDAO();
         
                 try {
-                    patientDoctorDAO.adicionarAssociacao(pacienteId, doctorId);
-                    System.out.println("Associação paciente-médico adicionada com sucesso!");
+                    patientDoctorDAO.adicionarAssociacao(pacienteId, doctorId, dataConsulta, detalhesConsulta);
                 } catch (SQLException ex) {
-                    System.out.println("Erro ao adicionar associação paciente-médico: " + ex.getMessage());
+                    System.out.println("Erro ao marcar consulta devido ao seguinte erro: " + ex.getMessage());
                 }
             }
         });
+
+        DesmarcarConsultas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Scanner scanner = new Scanner(System.in);
+        
+                System.out.print("Digite o ID do paciente: ");
+                int pacienteId = scanner.nextInt();
+        
+                System.out.print("Digite o ID do médico: ");
+                int doctorId = scanner.nextInt();
+        
+                scanner.nextLine();
+        
+                System.out.print("Digite a data da consulta a ser desmarcada: ");
+                String dataConsulta = scanner.nextLine();
+
+                PatientDoctorDAO patientDoctorDAO = new PatientDoctorDAO();
+        
+                try {
+                    patientDoctorDAO.desmarcarAssociacao(pacienteId, doctorId, dataConsulta);
+                } catch (SQLException ex) {
+                    System.out.println("Erro ao desmarcar consulta: " + ex.getMessage());
+                }
+            }
+        });
+        
         
 
         Scanner scanner = new Scanner(System.in);

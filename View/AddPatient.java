@@ -98,7 +98,7 @@ public class AddPatient extends JFrame {
                 Patient fact = FactoryMethod.CreatePatient(id, nome, birthdate);
                 PatientJDBC paciente = new PatientJDBC();
                 paciente.adicionarPaciente(fact);
-                System.out.println("Paciente adicionado com sucesso !");
+                
                 
             }
         });
